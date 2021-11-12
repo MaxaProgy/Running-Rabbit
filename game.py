@@ -9,7 +9,6 @@ from PyQt5.Qt import QTableWidgetItem
 from PyQt5 import QtCore, QtMultimedia
 from math import fabs
 
-
 PIC = 7
 
 
@@ -183,7 +182,7 @@ class People:
         self._pic = dict()
 
         for do in (self._STOP, self._LEFT, self._RIGHT, self._UP, self._DOWN):
-            self._pic[do] = [QPixmap(resource_path("PIC/" + self.number_pic + do + '_' + str(i) + ".png"))
+            self._pic[do] = [QPixmap(resource_path("PIC/" + self._number_pic + do + '_' + str(i) + ".png"))
                              for i in range(5)]
 
         self._pos_show_pic = 0
@@ -220,7 +219,7 @@ class People:
 
         if self._y != game.map.get_row() - 1 and \
                 type(game.map.get_elem_xy(int(round(self._x)), int(round(self._y - 2 * self._step)) + 1)) \
-                in [Zerro, One, Empty, Bush, Brick, Portal]\
+                in [Zerro, One, Empty, Bush, Brick, Portal] \
                 and type(game.map.get_elem_xy(int(round(self._x)),
                                               int(round(self._y)))) != Stairs and \
                 game.map.get_elem_xy(int(round(self._x)),
@@ -254,26 +253,27 @@ class People:
             if self._what_doing_now == self._RIGHT:
                 self._previous_action = self._what_doing_now
                 if self._x != game.map.get_col() - 4 * self._step and (
-                            (game.map.get_elem_xy(int(round(self._x + 2 * self._step)),
-                                                  int(round(self._y))).get_transparency() and
-                             (round(int(self._y), 1) == round(self._y, 1))) or
-                            (self._y == game.map.get_row() - 1 or game.map.get_elem_xy(int(self._x - self._step) + 1,
-                                                  int(self._y) + 1).get_transparency()) and
-                             game.map.get_elem_xy(int(round(self._x - 3 * self._step)) + 1,
-                                                  int(self._y)).get_transparency()):
+                        (game.map.get_elem_xy(int(round(self._x + 2 * self._step)),
+                                              int(round(self._y))).get_transparency() and
+                         (round(int(self._y), 1) == round(self._y, 1))) or
+                        (self._y == game.map.get_row() - 1 or game.map.get_elem_xy(int(self._x - self._step) + 1,
+                                                                                   int(
+                                                                                       self._y) + 1).get_transparency()) and
+                        game.map.get_elem_xy(int(round(self._x - 3 * self._step)) + 1,
+                                             int(self._y)).get_transparency()):
                     self._x += self._step
 
             elif self._what_doing_now == self._LEFT:
                 self._previous_action = self._what_doing_now
 
                 if self._x != -self._step and ((round(int(self._y), 1) == round(self._y, 1) and
-                        game.map.get_elem_xy(int(round(self._x - 2 * self._step)),
-                            int(round(self._y))).get_transparency()) or
-                        (round(int(self._y), 1) != round(self._y, 1) and
-                        game.map.get_elem_xy(int(round(self._x + 3 * self._step)) - 1,
-                            int(self._y) + 1).get_transparency() and
-                        game.map.get_elem_xy(int(round(self._x + 3 * self._step)) - 1,
-                            int(self._y)).get_transparency())):
+                                                game.map.get_elem_xy(int(round(self._x - 2 * self._step)),
+                                                                     int(round(self._y))).get_transparency()) or
+                                               (round(int(self._y), 1) != round(self._y, 1) and
+                                                game.map.get_elem_xy(int(round(self._x + 3 * self._step)) - 1,
+                                                                     int(self._y) + 1).get_transparency() and
+                                                game.map.get_elem_xy(int(round(self._x + 3 * self._step)) - 1,
+                                                                     int(self._y)).get_transparency())):
                     self._x -= self._step
 
             elif self._what_doing_now == self._DOWN:
@@ -292,12 +292,10 @@ class People:
                 if self._y != 0 and (
                         (game.map.get_elem_xy(int(round(self._x)), int(self._y - self._step)).get_transparency() and
                          type(game.map.get_elem_xy(int(round(self._x)), int(round(self._y)))) == Stairs) or
-                         type(game.map.get_elem_xy(int(round(self._x)), int(round(self._y - self._step, 1))))
-                         in [Zerro, One, Empty, Bush]):
-
+                        type(game.map.get_elem_xy(int(round(self._x)), int(round(self._y - self._step, 1))))
+                        in [Zerro, One, Empty, Bush]):
                     self._x = round(self._x)
                     self._y -= self._step
-
 
             if type(game.map.get_elem_xy(int(round(self._x)), int(round(self._y)))) == Portal:
                 if self._flag_portal:
@@ -350,10 +348,9 @@ class People:
         self._what_doing_now = self._STOP
 
 
-
 class Hero(People):
     def __init__(self):
-        self.number_pic = "5"
+        self._number_pic = "5"
         super().__init__()
         self._previous_action = self._STOP
         self._lifes = 3
@@ -391,7 +388,6 @@ class Hero(People):
                 game.timer_game.start(200)
             else:
                 game.show_menu()
-
 
     def go_dig(self):
         if self._previous_action == self._LEFT:
@@ -786,7 +782,6 @@ class Game(QWidget):
         self.player.setVolume(50)
         self.initUI()
 
-
     def initUI(self):
         self.file_number = 2
         self._score = 0
@@ -996,7 +991,7 @@ class Game(QWidget):
             for i in range(self.map.get_col()):
                 for j in range(self.map.get_row()):
                     qp.drawPixmap(i * 40, j * 40 + 40,
-                                 self.map.get_elem_xy(i, j).get_pic())  # рисуем картинками из elem_map
+                                  self.map.get_elem_xy(i, j).get_pic())  # рисуем картинками из elem_map
             qp.drawPixmap(self.hero.get_x() * 40, self.hero.get_y() * 40 + 40, self.hero.get_pic())
             for enemy in self.enemies:
                 qp.drawPixmap(enemy.get_x() * 40, enemy.get_y() * 40 + 40, enemy.get_pic())
